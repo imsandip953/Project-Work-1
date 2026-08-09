@@ -1,6 +1,15 @@
 # 🎓 AttendancePro — Gamified Student Attendance Management System
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-InfinityFree-58cc02?style=for-the-badge&logo=googlechrome&logoColor=white)](http://myattendance.infinityfree.io)
+
 **AttendancePro** is a full-stack, role-based PHP & MySQL web application designed to manage student attendance, course allocations, and academic rosters. Featuring a vibrant, Duolingo-inspired UI with interactive flashcard roll calls and real-time statistics, it streamlines class management for administrators, teachers, and students.
+
+---
+
+## 🌐 Live Demo
+
+Explore the live hosted application:  
+👉 **[myattendance.infinityfree.io](http://myattendance.infinityfree.io)**
 
 ---
 
@@ -28,6 +37,7 @@
 * **Backend:** PHP 8.2+ with MySQLi
 * **Database:** MariaDB / MySQL
 * **Frontend:** HTML5, Tailwind CSS (via CDN), Font Awesome 6, Vanilla JavaScript (AJAX / Event Listeners)
+* **Hosting:** InfinityFree
 * **Design Language:** Duolingo-styled UI with 3D button effects, custom fonts (`Fredoka` & `Nunito Sans`), and responsive components
 
 ---
@@ -44,7 +54,7 @@ The system uses a relational database schema consisting of the following key tab
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Local Installation
 
 ### Prerequisites
 * A local web server stack like **XAMPP**, **WAMP**, or **MAMP** (PHP 8.2+ and MariaDB/MySQL).
