@@ -1,7 +1,57 @@
-🎓 AttendancePro — Gamified Student Attendance Management SystemAttendancePro is a full-stack, role-based PHP & MySQL web application designed to manage student attendance, course allocations, and academic rosters. Featuring a vibrant, Duolingo-inspired UI with interactive flashcard roll calls and real-time statistics, it streamlines class management for administrators, teachers, and students.  ✨ Key Features👑 1. Main Administrator HubUser Provisioning: Create and manage accounts for Main Admins, Faculty Guides, and Active Students.  Course Registration: Deploy new course modules with unique alpha-numeric course codes.  Instructor Allocation: Map assigned teachers to specific courses, terms/semesters, and sessions.  👨‍🏫 2. Faculty / Teacher PortalFlashcard-Style Roll Call: Interactive student card interface with an animated progress gauge.  Keyboard Shortcuts: Fast attendance marking (1 for Present, 2 for Absent) with background AJAX submissions.  Audit & Overrides: Filter historical log sheets by date and execute inline status overrides.  🎓 3. Student PortalSelf-Registration: New students can register their profiles with roll numbers, departments, semesters, and sessions.  Attendance Ledger: View detailed attendance percentages across all registered courses.  Dynamic Color Indicators: Visual status badges based on attendance percentage thresholds (e.g., green for ≥85%, blue for ≥75%, pink for <75%).  🛠️ Tech StackBackend: PHP 8.2+ with MySQLi  Database: MariaDB / MySQL  Frontend: HTML5, Tailwind CSS (via CDN), Font Awesome 6, Vanilla JavaScript (AJAX / Event Listeners)  Design Language: Duolingo-styled UI with 3D button effects, custom fonts (Fredoka & Nunito Sans), and responsive components  🗄️ Database ArchitectureThe system uses a relational database schema consisting of the following key tables:  users: Central table for managing authentication tokens and access roles (main_admin, teacher, student).  students: Profile metadata linked to users (roll number, department, semester, session, phone).  courses: Course module directory storing course names and unique codes.  teacher_assignments: Intersect mapping connecting instructors to courses, semesters, and sessions.  daily_attendance: Log table recording individual student attendance entries per course and date.  🚀 Getting StartedPrerequisitesA local web server stack like XAMPP, WAMP, or MAMP (PHP 8.2+ and MariaDB/MySQL).  Installation StepsClone the repository:Bashgit clone https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git
-cd YOUR-REPO-NAME
-Set up the Database:Open phpMyAdmin (http://localhost/phpmyadmin).  Create a new database named campus_attendance (or attendance_system).  Import the SQL schema file (attendance_system.sql) into the database.  Configure Database Connection:Open database.php and update your MySQL connection credentials if needed:  PHP$db_host = "localhost";
-$db_user = "root";
-$db_pass = "";
-$db_name = "campus_attendance";
-Run the Application:Place the project directory inside your local server web folder (e.g., htdocs for XAMPP).Open your browser and navigate to: http://localhost/YOUR-REPO-NAME/index.php.  🎹 Keyboard Shortcuts (Roll Call)When taking attendance in the Teacher Roll Call view:  Press 1 ➔ Mark Present  Press 2 ➔ Mark Absent  📝 LicenseDistributed under the MIT License. See LICENSE for more information.
+# 🎓 AttendancePro — Gamified Student Attendance Management System
+
+**AttendancePro** is a full-stack, role-based PHP & MySQL web application designed to manage student attendance, course allocations, and academic rosters. Featuring a vibrant, Duolingo-inspired UI with interactive flashcard roll calls and real-time statistics, it streamlines class management for administrators, teachers, and students.
+
+---
+
+## ✨ Key Features
+
+### 👑 1. Main Administrator Hub
+* **User Provisioning:** Create and manage accounts for Main Admins, Faculty Guides, and Active Students.
+* **Course Registration:** Deploy new course modules with unique alpha-numeric course codes.
+* **Instructor Allocation:** Map assigned teachers to specific courses, terms/semesters, and sessions.
+
+### 👨‍🏫 2. Faculty / Teacher Portal
+* **Flashcard-Style Roll Call:** Interactive student card interface with an animated progress gauge.
+* **Keyboard Shortcuts:** Fast attendance marking (`1` for **Present**, `2` for **Absent**) with background AJAX submissions.
+* **Audit & Overrides:** Filter historical log sheets by date and execute inline status overrides.
+
+### 🎓 3. Student Portal
+* **Self-Registration:** New students can register their profiles with roll numbers, departments, semesters, and sessions.
+* **Attendance Ledger:** View detailed attendance percentages across all registered courses.
+* **Dynamic Color Indicators:** Visual status badges based on attendance percentage thresholds (e.g., green for ≥85%, blue for ≥75%, pink for <75%).
+
+---
+
+## 🛠️ Tech Stack
+
+* **Backend:** PHP 8.2+ with MySQLi
+* **Database:** MariaDB / MySQL
+* **Frontend:** HTML5, Tailwind CSS (via CDN), Font Awesome 6, Vanilla JavaScript (AJAX / Event Listeners)
+* **Design Language:** Duolingo-styled UI with 3D button effects, custom fonts (`Fredoka` & `Nunito Sans`), and responsive components
+
+---
+
+## 🗄️ Database Architecture
+
+The system uses a relational database schema consisting of the following key tables:
+
+* `users`: Central table for managing authentication tokens and access roles (`main_admin`, `teacher`, `student`).
+* `students`: Profile metadata linked to users (roll number, department, semester, session, phone).
+* `courses`: Course module directory storing course names and unique codes.
+* `teacher_assignments`: Intersect mapping connecting instructors to courses, semesters, and sessions.
+* `daily_attendance`: Log table recording individual student attendance entries per course and date.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+* A local web server stack like **XAMPP**, **WAMP**, or **MAMP** (PHP 8.2+ and MariaDB/MySQL).
+
+### Installation Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/imsandip953/Project-Work-1.git](https://github.com/imsandip953/Project-Work-1.git)
+   cd Project-Work-1
