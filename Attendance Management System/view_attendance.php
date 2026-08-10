@@ -1,18 +1,45 @@
 <?php
 require 'database.php';
-if ($_SESSION['role'] != 'teacher') { header("Location: dashboard.php"); exit; }
 
-$course_id = isset($_GET['course_id']) ? intval($_GET['course_id']) : 0;
-$chosen_date = isset($_POST['target_date']) ? $_POST['target_date'] : date('Y-m-d');
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['inline_toggle'])) {
-    $stmt = $conn->prepare("UPDATE daily_attendance SET status = ? WHERE id = ?");
-    $stmt->bind_param("si", $_POST['new_status'], intval($_POST['record_id'])); $stmt->execute();
-    header("Location: view_attendance.php?course_id=$course_id"); exit;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-$stmt = $conn->prepare("SELECT da.id as rec_id, da.status, u.name, s.roll_number, s.department FROM daily_attendance da JOIN users u ON da.student_id = u.id JOIN students s ON u.id = s.user_id WHERE da.course_id = ? AND da.date = ? ORDER BY u.name ASC");
-$stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $stmt->get_result();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'teacher') { 
+    header("Location: dashboard.php"); 
+    exit; 
+}
+
+$course_id = isset($_GET['course_id']) ? intval($_GET['course_id']) : 0;
+$chosen_date = isset($_POST['target_date']) ? $_POST['target_date'] : (isset($_GET['target_date']) ? $_GET['target_date'] : date('Y-m-d'));
+
+// Handle inline attendance status toggle
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inline_toggle'])) {
+    try {
+        $stmt = $conn->prepare("UPDATE daily_attendance SET status = ? WHERE id = ?");
+        $rec_id = intval($_POST['record_id']);
+        $new_status = $_POST['new_status'];
+        $stmt->bind_param("si", $new_status, $rec_id);
+        $stmt->execute();
+        
+        // Refresh page and keep course_id and selected date intact
+        header("Location: view_attendance.php?course_id=" . $course_id . "&target_date=" . urlencode($chosen_date));
+        exit;
+    } catch (Exception $e) {
+        die("Database Execution Error: " . $e->getMessage());
+    }
+}
+
+// Query logs matching daily_attendance, users, and students tables
+$stmt = $conn->prepare("SELECT da.id as rec_id, da.status, u.name, s.roll_number, s.department 
+                        FROM daily_attendance da 
+                        JOIN users u ON da.student_id = u.id 
+                        JOIN students s ON u.id = s.user_id 
+                        WHERE da.course_id = ? AND da.date = ? 
+                        ORDER BY u.name ASC");
+$stmt->bind_param("is", $course_id, $chosen_date);
+$stmt->execute();
+$logs = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +75,6 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
         }
     </script>
     <style>
-        /* Duolingo Typography Rules */
         .font-feather {
             font-family: 'Fredoka', sans-serif;
             font-weight: 700;
@@ -58,19 +84,6 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
             font-family: 'Nunito Sans', sans-serif;
             letter-spacing: 0.053em;
         }
-        
-        /* 3D Interactive Tactical Components */
-        .btn-3d-green {
-            background-color: #58cc02;
-            color: #ffffff;
-            box-shadow: 0 4px 0 #3f8f01;
-            transition: all 0.1s ease;
-        }
-        .btn-3d-green:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #3f8f01;
-        }
-
         .btn-3d-blue {
             background-color: #1cb0f6;
             color: #ffffff;
@@ -81,7 +94,6 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
             transform: translateY(4px);
             box-shadow: 0 0px 0 #0c91d1;
         }
-
         .btn-3d-outline {
             background-color: #ffffff;
             color: #777777;
@@ -93,8 +105,6 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
             transform: translateY(4px);
             box-shadow: 0 0px 0 #e5e5e5;
         }
-
-        /* Form Controls */
         input[type="date"] {
             border: 2px solid #e5e5e5 !important;
             border-radius: 12px !important;
@@ -171,7 +181,7 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
                         <tbody class="divide-y-2 divide-cloud-gray">
                             <?php 
                             while ($l = $logs->fetch_assoc()): 
-                                if ($l['status'] == 'Present') {
+                                if ($l['status'] === 'Present') {
                                     $badge_styles = 'bg-grape-soda/10 text-grape-soda border-grape-soda';
                                     $target_toggle_status = 'Absent';
                                     $target_toggle_label = 'Mark Absent';
@@ -193,7 +203,7 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
                                     </td>
                                     <td class="px-6 py-4.5">
                                         <span class="inline-block px-3 py-1 rounded-xl text-[11px] font-extrabold border-2 <?php echo $badge_styles; ?> uppercase tracking-wider">
-                                            <?php echo $l['status'] == 'Present' ? '🌟 Present' : '❌ Absent'; ?>
+                                            <?php echo $l['status'] === 'Present' ? '🌟 Present' : '❌ Absent'; ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4.5 text-right">
@@ -201,6 +211,7 @@ $stmt->bind_param("is", $course_id, $chosen_date); $stmt->execute(); $logs = $st
                                             <input type="hidden" name="inline_toggle" value="1">
                                             <input type="hidden" name="record_id" value="<?php echo $l['rec_id']; ?>">
                                             <input type="hidden" name="new_status" value="<?php echo $target_toggle_status; ?>">
+                                            <input type="hidden" name="target_date" value="<?php echo htmlspecialchars($chosen_date); ?>">
                                             <button type="submit" class="btn-3d-outline text-[11px] font-extrabold px-3 py-1.5 rounded-xl uppercase tracking-wider border-2 <?php echo $action_btn_class; ?> transition-colors shadow-[0_2px_0_#e5e5e5] active:translate-y-[2px] active:shadow-none">
                                                 <?php echo $target_toggle_label; ?>
                                             </button>
